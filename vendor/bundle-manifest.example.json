@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "platform": "windows-x86_64",
+  "components": {
+    "ffmpeg": {
+      "version": "REPLACE_ME",
+      "license_expression": "GPL-2.0-or-later",
+      "source_url": "REPLACE_WITH_RELEASE_SOURCE_URL",
+      "source_sha256": "REPLACE_WITH_64_HEX_DIGEST",
+      "license_files": [
+        "licenses/ffmpeg/COPYING.GPLv2"
+      ],
+      "version_output_file": "licenses/ffmpeg/ffmpeg-version.txt"
+    },
+    "dcpomatic": {
+      "version": "REPLACE_ME",
+      "license_expression": "GPL-2.0-only",
+      "source_url": "REPLACE_WITH_RELEASE_SOURCE_URL",
+      "source_sha256": "REPLACE_WITH_64_HEX_DIGEST",
+      "license_files": [
+        "licenses/dcpomatic/COPYING"
+      ],
+      "version_output_file": "licenses/dcpomatic/dcpomatic-version.txt"
+    }
+  },
+  "required_tools": {
+    "ffmpeg": "tools/ffmpeg/ffmpeg.exe",
+    "ffprobe": "tools/ffmpeg/ffprobe.exe",
+    "dcpomatic2_create": "tools/dcpomatic/dcpomatic2_create.exe",
+    "dcpomatic2_cli": "tools/dcpomatic/dcpomatic2_cli.exe"
+  },
+  "files": {
+    "REPLACE_WITH_EVERY_PAYLOAD_FILE_EXCEPT_bundle-manifest.json": "REPLACE_WITH_64_HEX_DIGEST"
+  }
+}
