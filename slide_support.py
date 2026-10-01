@@ -25,8 +25,8 @@ def positive_seconds(value):
 
 
 def add_slide_arguments(parser):
-    parser.add_argument('--slide-duration', type=positive_seconds, default=2.0,
-                        metavar='SECONDS', help='end slide runtime (default: 2 seconds); also applies to folders')
+    parser.add_argument('--slide-duration', type=positive_seconds, default=3.5,
+                        metavar='SECONDS', help='end slide runtime (default: 3.5 seconds); also applies to folders')
 
 
 def normalized_name(path):

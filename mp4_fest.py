@@ -34,13 +34,21 @@ def command_line() -> argparse.Namespace:
         )
     )
     parser.add_argument("input", type=Path, help="input video or folder")
-    parser.add_argument(
+    destination = parser.add_mutually_exclusive_group()
+    destination.add_argument(
         "output",
+        nargs="?",
         type=Path,
         help=(
-            "output MP4 (for one input file) or output folder; an existing "
+            "legacy output MP4 (for one input file) or output folder; an existing "
             "directory is always treated as a folder"
         ),
+    )
+    destination.add_argument(
+        "--output-dir",
+        type=Path,
+        default=Path.cwd(),
+        help="output directory for MP4 files (default: current directory)",
     )
     parser.add_argument(
         "--audio-stream",
@@ -472,7 +480,10 @@ def main() -> int:
         sources = discover_inputs(args.input)
         if not sources:
             raise ConversionError("No supported video files were found in the input folder.")
-        outputs = output_paths(args.input, args.output, sources)
+        if args.output is not None:
+            outputs = output_paths(args.input, args.output.expanduser(), sources)
+        else:
+            outputs = [args.output_dir.expanduser() / f"{source.stem}.mp4" for source in sources]
     except ConversionError as error:
         print(f"Error: {error}", file=sys.stderr)
         return 2

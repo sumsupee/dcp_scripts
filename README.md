@@ -1,5 +1,26 @@
 # MP4-to-DCP
 
+## Running the converters
+
+All three converters accept the same input/output command pattern:
+
+```bash
+python3 mp4_to_dcp.py "/path/to/source.mov" --output-dir "./output/dcp"
+python3 mp4_to_proludio.py "/path/to/source.mov" --output-dir "./output/proludio"
+python3 mp4_fest.py "/path/to/source.mov" --output-dir "./output/fest"
+```
+
+The input can also be a folder. `--output-dir` is optional for all three;
+when omitted, results go into the current working directory. DCP creates
+project directories; Proludio and Fest write `<source-stem>.mp4`. Use separate
+output folders to keep each converter's results. An MP4 output cannot replace
+its own input, even with `--overwrite`, so use `--output-dir` when converting
+an MP4 in the current directory.
+
+Proludio and Fest also accept the older positional output file or folder for
+compatibility (for example, `python3 mp4_to_proludio.py source.mov approved.mp4`).
+Use either that positional output or `--output-dir`, not both.
+
 ## Projector-safe MP4 conversion
 
 `mp4_to_proludio.py` creates a conservative MP4 for players that require
@@ -13,13 +34,13 @@ in the centre channel. A source with no soundtrack gets a silent 5.1 track.
 Convert one file:
 
 ```bash
-python3 mp4_to_proludio.py "/path/to/source.mov" "/path/to/approved.mp4"
+python3 mp4_to_proludio.py "/path/to/source.mov" --output-dir "/path/to/output"
 ```
 
 Convert every supported video in a folder:
 
 ```bash
-python3 mp4_to_proludio.py "/path/to/input folder" "/path/to/output folder"
+python3 mp4_to_proludio.py "/path/to/input folder" --output-dir "/path/to/output folder"
 ```
 
 Existing output files are protected by default. Add `--overwrite` to replace
@@ -50,11 +71,12 @@ default, rounded to the nearest video frame. Their audio is silent, with the
 same channel layout as the converted video; the MP4 audio track continues
 through the slide.
 
-Set a custom duration with either script (also applies to every match in a folder):
+Set a custom duration with any converter (also applies to every match in a folder):
 
 ```bash
 python3 mp4_to_dcp.py Trailer.mp4 --output-dir ./output --slide-duration 3.5
-python3 mp4_to_proludio.py Trailer.mp4 ./output/Trailer.mp4 --slide-duration 3.5
+python3 mp4_to_proludio.py Trailer.mp4 --output-dir ./output --slide-duration 3.5
+python3 mp4_fest.py Trailer.mp4 --output-dir ./output --slide-duration 3.5
 ```
 
 Matching prefers exact names, then ignores case, spaces, and punctuation.
