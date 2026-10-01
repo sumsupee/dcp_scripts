@@ -10,6 +10,14 @@ python3 mp4_to_proludio.py "/path/to/source.mov" --output-dir "./output/proludio
 python3 mp4_fest.py "/path/to/source.mov" --output-dir "./output/fest"
 ```
 
+All three accept MKV input, both as individual files and in folders:
+
+```bash
+python3 mp4_to_dcp.py "movie.mkv" --output-dir "./output/dcp"
+python3 mp4_to_proludio.py "movie.mkv" --output-dir "./output/proludio"
+python3 mp4_fest.py "movie.mkv" --output-dir "./output/fest"
+```
+
 The input can also be a folder. `--output-dir` is optional for all three;
 when omitted, results go into the current working directory. DCP creates
 project directories; Proludio and Fest write `<source-stem>.mp4`. Use separate
@@ -55,7 +63,7 @@ surround information while deliberately avoiding synthesized LFE. It cannot
 recover the original production stems; only a source containing discrete 5.1
 can provide a genuine original surround mix.
 
-`mp4_to_dcp.py` converts an MP4, MOV, or similar video into unencrypted 5.1
+`mp4_to_dcp.py` converts an MP4, MOV, MKV, or similar video into unencrypted 5.1
 SMPTE 2K DCPs using FFmpeg and DCP-o-matic. It prepares, normalizes, and
 verifies six-channel audio before and after DCP creation.
 
@@ -154,7 +162,7 @@ $HOME/DCPs/trailer_DCP_Scope/
 
 The exact finished DCP directories are printed after a successful conversion.
 
-## Convert every MP4 in a folder
+## Convert every MP4 and MKV in a folder
 
 Pass a directory instead of a file:
 
@@ -163,13 +171,12 @@ python3 mp4_to_dcp.py "$HOME/Videos/Trailers" \
   --output-dir "$HOME/DCPs"
 ```
 
-The script snapshots all top-level files ending in `.mp4` (case-insensitive),
-sorts them by filename, and converts them sequentially. It does not search
-subdirectories and ignores MOV, MKV, hidden non-MP4 files, and other file
-types in directory mode.
+The DCP script snapshots all top-level files ending in `.mp4` or `.mkv`
+(case-insensitive), sorts them by filename, and converts them sequentially.
+It does not search subdirectories and ignores other file types in directory mode.
 
-Each MP4 filename becomes that trailer's DCP name. Consequently, `--name`
-cannot be used with a directory input. All other options apply to every MP4.
+Each source filename becomes that trailer's DCP name. Consequently, `--name`
+cannot be used with a directory input. All other options apply to every selected video.
 If one conversion fails, the remaining files are still attempted and a batch
 summary is printed at the end.
 

@@ -28,7 +28,7 @@ class OutputCliTests(unittest.TestCase):
     def test_mp4_destinations_reach_conversion(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            source = root / "source.mov"
+            source = root / "source.mkv"
             source.touch()
             for module in (mp4_to_proludio, mp4_fest):
                 for input_path in (source, root):

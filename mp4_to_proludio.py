@@ -33,7 +33,7 @@ def command_line() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Convert one video, or every supported video in a folder, to a "
-            "projector-safe 1920x1080 H.264/AAC MP4."
+            "projector-safe 1920x1080 H.264/AAC MP4. Supports MP4, MOV, and MKV input."
         )
     )
     parser.add_argument("input", type=Path, help="input video or folder")

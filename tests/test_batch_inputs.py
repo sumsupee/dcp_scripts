@@ -11,24 +11,42 @@ import unittest
 from unittest.mock import patch
 
 import mp4_to_dcp
+import mp4_to_proludio
+import mp4_fest
 
 
 class BatchInputTests(unittest.TestCase):
-    def test_directory_discovers_only_top_level_mp4_files_in_name_order(self):
+    def test_directory_discovers_only_top_level_mp4_and_mkv_files_in_name_order(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for name in ("z-last.mp4", "A-first.MP4", "ignore.mov", "notes.txt"):
+            for name in ("z-last.mp4", "A-first.MP4", "B-second.MKV", "c-third.mkv", "ignore.mov", "notes.txt"):
                 (root / name).touch()
             nested = root / "nested"
             nested.mkdir()
             (nested / "ignored.mp4").touch()
+            (nested / "ignored.mkv").touch()
 
             discovered = mp4_to_dcp.discover_inputs(root)
 
             self.assertEqual(
                 [path.name for path in discovered],
-                ["A-first.MP4", "z-last.mp4"],
+                ["A-first.MP4", "B-second.MKV", "c-third.mkv", "z-last.mp4"],
             )
+
+    def test_all_converters_discover_individual_and_folder_mkv_inputs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            sources = [root / "a.mkv", root / "b.MKV"]
+            for source in sources:
+                source.touch()
+            nested = root / "nested"
+            nested.mkdir()
+            (nested / "ignored.mkv").touch()
+            for module in (mp4_to_dcp, mp4_to_proludio, mp4_fest):
+                with self.subTest(module=module.__name__):
+                    self.assertEqual(module.discover_inputs(root), sources)
+                    for source in sources:
+                        self.assertEqual(module.discover_inputs(source), [source])
 
     def test_batch_attempts_every_file_after_a_failure(self):
         with tempfile.TemporaryDirectory() as directory:

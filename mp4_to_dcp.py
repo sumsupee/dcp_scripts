@@ -549,7 +549,7 @@ def verify_six_channel_audio(ffprobe, input_file, label):
 
 
 def discover_inputs(input_path):
-    """Return one source file, or the top-level MP4 files in a directory."""
+    """Return one source file, or the top-level MP4 and MKV files in a directory."""
     if input_path.is_file():
         return [input_path]
     if not input_path.is_dir():
@@ -559,12 +559,12 @@ def discover_inputs(input_path):
         (
             path
             for path in input_path.iterdir()
-            if path.is_file() and path.suffix.lower() == ".mp4"
+            if path.is_file() and path.suffix.lower() in {".mp4", ".mkv"}
         ),
         key=lambda path: path.name.casefold(),
     )
     if not input_files:
-        raise RuntimeError(f"No MP4 files found in source directory: {input_path}")
+        raise RuntimeError(f"No MP4 or MKV files found in source directory: {input_path}")
     return input_files
 
 
@@ -572,13 +572,13 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description=(
             "Create 5.1 SMPTE 2K Flat and/or Scope DCPs with DCP-o-matic. "
-            "A directory input processes all top-level MP4 files."
+            "A directory input processes all top-level MP4 and MKV files."
         )
     )
     parser.add_argument(
         "input",
         type=Path,
-        help="source MP4/MOV file, or directory containing MP4 files",
+        help="source MP4/MOV/MKV file, or directory containing MP4 and MKV files",
     )
     parser.add_argument(
         "--name",
@@ -855,7 +855,7 @@ def main():
         if input_path.is_dir() and args.name:
             raise RuntimeError(
                 "--name can only be used with a single input file; directory inputs "
-                "use each MP4 filename as its DCP name."
+                "use each source filename as its DCP name."
             )
     except (RuntimeError, OSError) as error:
         print(f"\nError: {error}", file=sys.stderr)
@@ -864,7 +864,7 @@ def main():
     if len(input_files) == 1 and input_path.is_file():
         return convert_one(args, input_files[0], output_dir)
 
-    print(f"Found {len(input_files)} MP4 file(s) in: {input_path}")
+    print(f"Found {len(input_files)} MP4/MKV file(s) in: {input_path}")
     failures = []
     for index, input_file in enumerate(input_files, start=1):
         print("\n" + "=" * 72)
